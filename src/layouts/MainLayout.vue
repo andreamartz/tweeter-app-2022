@@ -1,10 +1,10 @@
 <template>
 	<q-layout view="lHr lpR fFf">
-		<q-header bordered class="bg-primary text-white">
+		<q-header bordered class="bg-white text-black">
 			<q-toolbar>
 				<q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-				<q-toolbar-title>Tweeter</q-toolbar-title>
+				<q-toolbar-title class="text-weight-bold">Tweeter</q-toolbar-title>
 
 				<!-- <q-btn dense flat round icon="menu" @click="toggleRightDrawer" /> -->
 			</q-toolbar>
