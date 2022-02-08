@@ -31,8 +31,8 @@
 			</div>
 		</div>
 		<q-separator class="divider" size="10px" color="grey-2" />
-		<q-list>
-			<q-item class="q-py-md">
+		<q-list separator>
+			<q-item v-for="tweet in tweets" :key="tweet.date" class="q-py-md">
 				<q-item-section avatar top>
 					<q-avatar>
 						<img src="https://cdn.quasar.dev/img/avatar2.jpg" />
@@ -45,10 +45,7 @@
 						<span class="text-grey-7"> @janedoe </span>
 					</q-item-label>
 					<q-item-label class="tweet-content text-body1">
-						Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facilis,
-						reprehenderit voluptatem consectetur magnam enim repellat odit,
-						animi dolore minus sed ipsa veniam! Tempore cumque est dolorem quis
-						itaque sapiente exercitationem.
+						{{ tweet.content }}
 					</q-item-label>
 					<div class="tweet-icons row justify-between q-mt-sm">
 						<q-btn flat round color="grey" size="sm" icon="far fa-comment" />
@@ -58,21 +55,46 @@
 					</div>
 				</q-item-section>
 
-				<q-item-section side top> 1 min ago </q-item-section>
+				<q-item-section side top>
+					<!-- {{ tweet.date | relativeDate }} -->
+					{{ relativeDate(tweet.date) }}
+				</q-item-section>
 			</q-item>
 		</q-list>
 	</q-page>
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { formatDistance } from 'date-fns';
 
 export default {
 	name: 'PageHome',
 	data() {
 		return {
 			newTweetContent: '',
+			tweets: [
+				{
+					content:
+						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed feugiat justo id viverra consequat. Integer feugiat lorem faucibus est ornare scelerisque. Donec tempus, nunc vitae semper sagittis, odio magna semper ipsum, et laoreet sapien mauris vitae arcu.',
+					date: 1644352412509,
+				},
+				{
+					content:
+						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed feugiat justo id viverra consequat. Integer feugiat lorem faucibus est ornare scelerisque. Donec tempus, nunc vitae semper sagittis, odio magna semper ipsum, et laoreet sapien mauris vitae arcu.',
+					date: 1644352485558,
+				},
+			],
 		};
+	},
+	// filters: {
+	// 	relativeDate(value) {
+	// 		return formatDistance(value, new Date());
+	// 	},
+	// },
+	methods: {
+		relativeDate(value) {
+			return formatDistance(value, new Date());
+		},
 	},
 };
 </script>
