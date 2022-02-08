@@ -4,7 +4,16 @@
 			<q-toolbar>
 				<q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
-				<q-toolbar-title class="text-weight-bold">Tweeter</q-toolbar-title>
+				<q-toolbar-title class="text-weight-bold">
+					<span class="gt-sm">Tweeter</span>
+					<q-icon
+						name="fas fa-dove"
+						size="sm"
+						color="primary"
+						class="header-icon q-pa-md lt-md"
+					>
+					</q-icon>
+				</q-toolbar-title>
 
 				<!-- <q-btn dense flat round icon="menu" @click="toggleRightDrawer" /> -->
 			</q-toolbar>
@@ -116,3 +125,11 @@ export default {
 	},
 };
 </script>
+
+<style lang="sass">
+.header-icon
+	position: absolute
+	bottom: 0
+	left: 50%
+	transform: translateX(-50%)
+</style>
