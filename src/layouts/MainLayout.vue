@@ -28,25 +28,10 @@
 import { ref } from 'vue';
 
 export default {
-	// Danny's code
-	// data() {
-	// 	return {
-	// 		left: false,
-	// 		right: false,
-	// 	};
-	// },
-	setup() {
-		const leftDrawerOpen = ref(false);
-		const rightDrawerOpen = ref(false);
+	data() {
 		return {
-			leftDrawerOpen,
-			toggleLeftDrawer() {
-				leftDrawerOpen.value = !leftDrawerOpen.value;
-			},
-			rightDrawerOpen,
-			toggleRightDrawer() {
-				rightDrawerOpen.value = !rightDrawerOpen.value;
-			},
+			left: false,
+			right: false,
 		};
 	},
 };
