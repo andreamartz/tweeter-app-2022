@@ -57,7 +57,7 @@
 
 				<q-item-section side top>
 					<!-- {{ tweet.date | relativeDate }} -->
-					{{ relativeDate(tweet.date) }}
+					{{ getRelativeDate(tweet.date) }}
 				</q-item-section>
 			</q-item>
 		</q-list>
@@ -92,7 +92,7 @@ export default {
 	// 	},
 	// },
 	methods: {
-		relativeDate(value) {
+		getRelativeDate(value) {
 			return formatDistance(value, new Date());
 		},
 	},
