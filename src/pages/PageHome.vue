@@ -33,41 +33,47 @@
 		</div>
 		<q-separator class="divider" size="10px" color="grey-2" />
 		<q-list separator>
-			<q-item v-for="tweet in tweets" :key="tweet.date" class="q-py-md">
-				<q-item-section avatar top>
-					<q-avatar>
-						<img src="https://cdn.quasar.dev/img/avatar2.jpg" />
-					</q-avatar>
-				</q-item-section>
+			<transition-group
+				appear
+				enter-active-class="animated fadeIn slow"
+				leave-active-class="animated fadeOut slow"
+			>
+				<q-item v-for="tweet in tweets" :key="tweet.date" class="q-py-md">
+					<q-item-section avatar top>
+						<q-avatar>
+							<img src="https://cdn.quasar.dev/img/avatar2.jpg" />
+						</q-avatar>
+					</q-item-section>
 
-				<q-item-section>
-					<q-item-label class="text-subtitle1">
-						<strong>Jane Doe</strong>
-						<span class="text-grey-7"> @janedoe </span>
-					</q-item-label>
-					<q-item-label class="tweet-content text-body1">
-						{{ tweet.content }}
-					</q-item-label>
-					<div class="tweet-icons row justify-between q-mt-sm">
-						<q-btn flat round color="grey" size="sm" icon="far fa-comment" />
-						<q-btn flat round color="grey" size="sm" icon="fas fa-retweet" />
-						<q-btn flat round color="grey" size="sm" icon="far fa-heart" />
-						<q-btn
-							@click="deleteTweet(tweet)"
-							flat
-							round
-							color="grey"
-							size="sm"
-							icon="fas fa-trash"
-						/>
-					</div>
-				</q-item-section>
+					<q-item-section>
+						<q-item-label class="text-subtitle1">
+							<strong>Jane Doe</strong>
+							<span class="text-grey-7"> @janedoe </span>
+						</q-item-label>
+						<q-item-label class="tweet-content text-body1">
+							{{ tweet.content }}
+						</q-item-label>
+						<div class="tweet-icons row justify-between q-mt-sm">
+							<q-btn flat round color="grey" size="sm" icon="far fa-comment" />
+							<q-btn flat round color="grey" size="sm" icon="fas fa-retweet" />
+							<q-btn flat round color="grey" size="sm" icon="far fa-heart" />
+							<q-btn
+								@click="deleteTweet(tweet)"
+								flat
+								round
+								color="grey"
+								size="sm"
+								icon="fas fa-trash"
+							/>
+						</div>
+					</q-item-section>
 
-				<q-item-section side top>
-					<!-- {{ tweet.date | relativeDate }} -->
-					{{ getRelativeDate(tweet.date) }}
-				</q-item-section>
-			</q-item>
+					<q-item-section side top>
+						<!-- {{ tweet.date | relativeDate }} -->
+						{{ getRelativeDate(tweet.date) }}
+					</q-item-section>
+				</q-item>
+			</transition-group>
 		</q-list>
 	</q-page>
 </template>
