@@ -48,7 +48,10 @@
 					<q-item-section>
 						<q-item-label class="text-subtitle1">
 							<strong>Jane Doe</strong>
-							<span class="text-grey-7"> @janedoe </span>
+							<span class="text-grey-7">
+								@janedoe <br class="lt-md" />
+								&bull; {{ getRelativeDate(tweet.date) }}
+							</span>
 						</q-item-label>
 						<q-item-label class="tweet-content text-body1">
 							{{ tweet.content }}
@@ -66,11 +69,6 @@
 								icon="fas fa-trash"
 							/>
 						</div>
-					</q-item-section>
-
-					<q-item-section side top>
-						<!-- {{ tweet.date | relativeDate }} -->
-						{{ getRelativeDate(tweet.date) }}
 					</q-item-section>
 				</q-item>
 			</transition-group>
