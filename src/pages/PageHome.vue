@@ -113,6 +113,7 @@ export default {
 			const tweets = [newTweet, ...this.tweets];
 			console.log('TWEETS: ', tweets);
 			this.tweets = tweets;
+			this.newTweetContent = '';
 		},
 		deleteTweet(tweet) {
 			let dateToDelete = tweet.date;
