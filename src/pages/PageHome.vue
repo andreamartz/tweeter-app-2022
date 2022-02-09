@@ -52,7 +52,14 @@
 						<q-btn flat round color="grey" size="sm" icon="far fa-comment" />
 						<q-btn flat round color="grey" size="sm" icon="fas fa-retweet" />
 						<q-btn flat round color="grey" size="sm" icon="far fa-heart" />
-						<q-btn flat round color="grey" size="sm" icon="fas fa-trash" />
+						<q-btn
+							@click="deleteTweet(tweet)"
+							flat
+							round
+							color="grey"
+							size="sm"
+							icon="fas fa-trash"
+						/>
 					</div>
 				</q-item-section>
 
@@ -106,6 +113,15 @@ export default {
 			const tweets = [newTweet, ...this.tweets];
 			console.log('TWEETS: ', tweets);
 			this.tweets = tweets;
+		},
+		deleteTweet(tweet) {
+			let dateToDelete = tweet.date;
+			let index = this.tweets.findIndex((tweet) => tweet.date === dateToDelete);
+			// don't use splice; it mutates the state
+			// this.tweets.splice(index, 1);
+			let tweetsBeforeDeleted = [...this.tweets.slice(0, index)];
+			let tweetsAfterDeleted = [...this.tweets.slice(index + 1)];
+			this.tweets = [...tweetsBeforeDeleted, ...tweetsAfterDeleted];
 		},
 	},
 };
