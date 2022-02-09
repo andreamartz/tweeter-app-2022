@@ -20,6 +20,7 @@
 			</div>
 			<div class="col col-shrink">
 				<q-btn
+					@click="addNewTweet"
 					class="q-mb-lg"
 					:disable="!newTweetContent"
 					color="primary"
@@ -94,6 +95,17 @@ export default {
 	methods: {
 		getRelativeDate(value) {
 			return formatDistance(value, new Date());
+		},
+		addNewTweet() {
+			let newTweet = {
+				content: this.newTweetContent,
+				date: Date.now(),
+			};
+			// don't use unshift; it mutates the state
+			// this.tweets.unshift(newTweet);
+			const tweets = [newTweet, ...this.tweets];
+			console.log('TWEETS: ', tweets);
+			this.tweets = tweets;
 		},
 	},
 };
