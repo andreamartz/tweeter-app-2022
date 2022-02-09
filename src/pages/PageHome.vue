@@ -57,8 +57,20 @@
 							{{ tweet.content }}
 						</q-item-label>
 						<div class="tweet-icons row justify-between q-mt-sm">
-							<q-btn flat round color="grey" size="sm" icon="far fa-comment" />
-							<q-btn flat round color="grey" size="sm" icon="fas fa-retweet" />
+								<q-btn
+									flat
+									round
+									color="grey"
+									size="sm"
+									icon="far fa-comment"
+								/>
+								<q-btn
+									flat
+									round
+									color="grey"
+									size="sm"
+									icon="fas fa-retweet"
+								/>
 							<q-btn flat round color="grey" size="sm" icon="far fa-heart" />
 							<q-btn
 								@click="deleteTweet(tweet)"
