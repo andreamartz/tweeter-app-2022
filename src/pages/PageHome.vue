@@ -91,7 +91,11 @@
 </template>
 
 <script>
+import db from 'src/boot/firebase';
+
 import { formatDistance } from 'date-fns';
+
+import { onSnapshot, collection, query, orderBy } from 'firebase/firestore';
 
 export default {
 	name: 'PageHome',
@@ -99,16 +103,16 @@ export default {
 		return {
 			newTweetContent: '',
 			tweets: [
-				{
-					content:
-						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed feugiat justo id viverra consequat. Integer feugiat lorem faucibus est ornare scelerisque. Donec tempus, nunc vitae semper sagittis, some different text',
-					date: 1644352412509,
-				},
-				{
-					content:
-						'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed feugiat justo id viverra consequat. Integer feugiat lorem faucibus est ornare scelerisque. Donec tempus, nunc vitae semper sagittis, odio magna semper ipsum, et laoreet sapien mauris vitae arcu.',
-					date: 1644363080944,
-				},
+				// {
+				// 	content:
+				// 		'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed feugiat justo id viverra consequat. Integer feugiat lorem faucibus est ornare scelerisque. Donec tempus, nunc vitae semper sagittis, some different text',
+				// 	date: 1644352412509,
+				// },
+				// {
+				// 	content:
+				// 		'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed feugiat justo id viverra consequat. Integer feugiat lorem faucibus est ornare scelerisque. Donec tempus, nunc vitae semper sagittis, odio magna semper ipsum, et laoreet sapien mauris vitae arcu.',
+				// 	date: 1644363080944,
+				// },
 			],
 		};
 	},
@@ -142,6 +146,31 @@ export default {
 			let tweetsAfterDeleted = [...this.tweets.slice(index + 1)];
 			this.tweets = [...tweetsBeforeDeleted, ...tweetsAfterDeleted];
 		},
+	},
+
+	// View changes between snapshots (realtime data sync across devices)
+	mounted() {
+		const tweetsCollection = collection(db, 'tweets');
+		console.log('TWEETS COLLECTION: ', tweetsCollection);
+		const tweetsQuery = query(tweetsCollection, orderBy('date'));
+
+		const unsubscribe = onSnapshot(tweetsQuery, (snapshot) => {
+			snapshot.docChanges().forEach((change) => {
+				let tweetChange = change.doc.data();
+				// fires whenever a new weet is added to the database
+				if (change.type === 'added') {
+					console.log('New tweet: ', tweetChange);
+					let tweets = [tweetChange, ...this.tweets];
+					this.tweets = tweets;
+				}
+				if (change.type === 'modified') {
+					console.log('Modified tweet: ', tweetChange);
+				}
+				if (change.type === 'removed') {
+					console.log('Removed tweet: ', tweetChange);
+				}
+			});
+		});
 	},
 };
 </script>
