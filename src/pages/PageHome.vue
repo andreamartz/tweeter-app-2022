@@ -95,7 +95,13 @@ import db from 'src/boot/firebase';
 
 import { formatDistance } from 'date-fns';
 
-import { onSnapshot, collection, query, orderBy } from 'firebase/firestore';
+import {
+	onSnapshot,
+	collection,
+	query,
+	orderBy,
+	addDoc,
+} from 'firebase/firestore';
 
 export default {
 	name: 'PageHome',
@@ -125,16 +131,24 @@ export default {
 		getRelativeDate(value) {
 			return formatDistance(value, new Date());
 		},
-		addNewTweet() {
+		async addNewTweet() {
+			const tweetCollection = collection(db, 'tweets');
 			let newTweet = {
 				content: this.newTweetContent,
 				date: Date.now(),
 			};
-			// don't use unshift; it mutates the state
-			// this.tweets.unshift(newTweet);
-			const tweets = [newTweet, ...this.tweets];
-			console.log('TWEETS: ', tweets);
-			this.tweets = tweets;
+			// // don't use unshift; it mutates the state
+			// // this.tweets.unshift(newTweet);
+			// const tweets = [newTweet, ...this.tweets];
+			// console.log('TWEETS: ', tweets);
+			// this.tweets = tweets;
+
+			// Add a new document with a generated id
+			const docRef = await addDoc(tweetCollection, newTweet);
+			if (!docRef) {
+				console.error('Error adding document');
+			}
+			console.log('Document written with ID: ', docRef.id);
 			this.newTweetContent = '';
 		},
 		deleteTweet(tweet) {
