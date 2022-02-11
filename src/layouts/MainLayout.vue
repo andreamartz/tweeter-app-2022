@@ -2,7 +2,8 @@
 	<q-layout view="lHr lpR fFf">
 		<q-header bordered class="bg-white text-black">
 			<q-toolbar>
-				<q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
+				<!-- <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" /> -->
+				<q-btn dense flat round icon="menu" @click="left = !left" />
 
 				<q-toolbar-title class="text-weight-bold">
 					<span class="gt-sm">{{ $route.name }}</span>
