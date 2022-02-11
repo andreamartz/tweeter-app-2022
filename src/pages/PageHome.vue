@@ -39,7 +39,7 @@
 					enter-active-class="animated fadeIn slow"
 					leave-active-class="animated fadeOut slow"
 				>
-					<q-item v-for="tweet in tweets" :key="tweet.date" class="q-py-md">
+					<q-item v-for="tweet in tweets" :key="tweet.id" class="q-py-md">
 						<q-item-section avatar top>
 							<q-avatar>
 								<img src="https://cdn.quasar.dev/img/avatar2.jpg" />
@@ -100,7 +100,9 @@ import {
 	collection,
 	query,
 	orderBy,
+	doc,
 	addDoc,
+	deleteDoc,
 } from 'firebase/firestore';
 
 export default {
@@ -144,33 +146,44 @@ export default {
 			// this.tweets = tweets;
 
 			// Add a new document with a generated id
-			const docRef = await addDoc(tweetCollection, newTweet);
-			if (!docRef) {
-				console.error('Error adding document');
+			try {
+				const docRef = await addDoc(tweetCollection, newTweet);
+				console.log('Document written with ID: ', docRef.id);
+				this.newTweetContent = '';
+			} catch (error) {
+				console.error(error);
 			}
-			console.log('Document written with ID: ', docRef.id);
-			this.newTweetContent = '';
 		},
-		deleteTweet(tweet) {
-			let dateToDelete = tweet.date;
-			let index = this.tweets.findIndex((tweet) => tweet.date === dateToDelete);
-			// don't use splice; it mutates the state
-			// this.tweets.splice(index, 1);
-			let tweetsBeforeDeleted = [...this.tweets.slice(0, index)];
-			let tweetsAfterDeleted = [...this.tweets.slice(index + 1)];
-			this.tweets = [...tweetsBeforeDeleted, ...tweetsAfterDeleted];
+		async deleteTweet(tweet) {
+			// let dateToDelete = tweet.date;
+			// let index = this.tweets.findIndex((tweet) => tweet.date === dateToDelete);
+			try {
+				const tweetToDelete = await deleteDoc(doc(db, 'tweets', tweet.id));
+			} catch (error) {
+				console.error(
+					'There was an error removing the document or the document does not exist: ',
+					error,
+				);
+			}
+			// // don't use splice; it mutates the state
+			// // this.tweets.splice(index, 1);
+			// let tweetsBeforeDeleted = [...this.tweets.slice(0, index)];
+			// let tweetsAfterDeleted = [...this.tweets.slice(index + 1)];
+			// this.tweets = [...tweetsBeforeDeleted, ...tweetsAfterDeleted];
 		},
 	},
 
-	// View changes between snapshots (realtime data sync across devices)
 	mounted() {
 		const tweetsCollection = collection(db, 'tweets');
 		console.log('TWEETS COLLECTION: ', tweetsCollection);
 		const tweetsQuery = query(tweetsCollection, orderBy('date'));
 
+		// View changes between snapshots (realtime data sync across devices) and
+		// make local state changes
 		const unsubscribe = onSnapshot(tweetsQuery, (snapshot) => {
 			snapshot.docChanges().forEach((change) => {
 				let tweetChange = change.doc.data();
+				tweetChange.id = change.doc.id;
 				// fires whenever a new weet is added to the database
 				if (change.type === 'added') {
 					console.log('New tweet: ', tweetChange);
@@ -182,6 +195,14 @@ export default {
 				}
 				if (change.type === 'removed') {
 					console.log('Removed tweet: ', tweetChange);
+					let index = this.tweets.findIndex(
+						(tweet) => tweet.id === tweetChange.id,
+					);
+					// don't use splice
+					// this.tweets.splice(index, 1);
+					let tweetsBeforeDeleted = [...this.tweets.slice(0, index)];
+					let tweetsAfterDeleted = [...this.tweets.slice(index + 1)];
+					this.tweets = [...tweetsBeforeDeleted, ...tweetsAfterDeleted];
 				}
 			});
 		});
