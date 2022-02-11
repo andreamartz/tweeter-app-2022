@@ -72,7 +72,14 @@
 									size="sm"
 									icon="fas fa-retweet"
 								/>
-								<q-btn flat round color="grey" size="sm" icon="far fa-heart" />
+								<q-btn
+									@click="toggleLiked(tweet)"
+									flat
+									round
+									:color="tweet.liked ? 'pink' : 'grey'"
+									size="sm"
+									:icon="tweet.liked ? 'fas fa-heart' : 'far fa-heart'"
+								/>
 								<q-btn
 									@click="deleteTweet(tweet)"
 									flat
@@ -102,6 +109,7 @@ import {
 	orderBy,
 	doc,
 	addDoc,
+	updateDoc,
 	deleteDoc,
 } from 'firebase/firestore';
 
@@ -112,14 +120,17 @@ export default {
 			newTweetContent: '',
 			tweets: [
 				// {
-				// 	content:
-				// 		'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed feugiat justo id viverra consequat. Integer feugiat lorem faucibus est ornare scelerisque. Donec tempus, nunc vitae semper sagittis, some different text',
+				// 	id: 'ID1',
+				// 	content: "Lorem iBe your own hero; it's cheaper than a movie ticket.",
 				// 	date: 1644352412509,
+				// 	liked: false,
 				// },
 				// {
+				// 	id: 'ID2',
 				// 	content:
 				// 		'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed feugiat justo id viverra consequat. Integer feugiat lorem faucibus est ornare scelerisque. Donec tempus, nunc vitae semper sagittis, odio magna semper ipsum, et laoreet sapien mauris vitae arcu.',
 				// 	date: 1644363080944,
+				// 	liked: true,
 				// },
 			],
 		};
@@ -138,6 +149,7 @@ export default {
 			let newTweet = {
 				content: this.newTweetContent,
 				date: Date.now(),
+				liked: false,
 			};
 			// // don't use unshift; it mutates the state
 			// // this.tweets.unshift(newTweet);
@@ -152,6 +164,18 @@ export default {
 				this.newTweetContent = '';
 			} catch (error) {
 				console.error(error);
+			}
+		},
+		async toggleLiked(tweet) {
+			const tweetRef = doc(db, 'tweets', tweet.id);
+
+			try {
+				await updateDoc(tweetRef, {
+					liked: !tweet.liked,
+				});
+				console.log('toggleLiked', tweet);
+			} catch (error) {
+				console.error('There was an error in updating the document: ', error);
 			}
 		},
 		async deleteTweet(tweet) {
@@ -191,10 +215,13 @@ export default {
 					this.tweets = tweets;
 				}
 				if (change.type === 'modified') {
+					let index = this.tweets.findIndex(
+						(tweet) => tweet.id === tweetChange.id,
+					);
+					Object.assign(this.tweets[index], tweetChange);
 					console.log('Modified tweet: ', tweetChange);
 				}
 				if (change.type === 'removed') {
-					console.log('Removed tweet: ', tweetChange);
 					let index = this.tweets.findIndex(
 						(tweet) => tweet.id === tweetChange.id,
 					);
@@ -203,6 +230,7 @@ export default {
 					let tweetsBeforeDeleted = [...this.tweets.slice(0, index)];
 					let tweetsAfterDeleted = [...this.tweets.slice(index + 1)];
 					this.tweets = [...tweetsBeforeDeleted, ...tweetsAfterDeleted];
+					console.log('Removed tweet: ', tweetChange);
 				}
 			});
 		});
